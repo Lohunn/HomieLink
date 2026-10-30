@@ -331,3 +331,4 @@ export default function TaskDetailModal({ task, onClose, onTaskUpdated, onJumpTo
     </div>
   );
 }
+

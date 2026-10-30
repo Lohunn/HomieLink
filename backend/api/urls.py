@@ -35,3 +35,4 @@ urlpatterns = [
     # Router API
     path('', include(router.urls)),
 ]
+

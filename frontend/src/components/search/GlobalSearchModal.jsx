@@ -177,3 +177,4 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
     </div>
   );
 }
+

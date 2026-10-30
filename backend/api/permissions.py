@@ -44,3 +44,4 @@ class IsWorkspaceAdminOrOwner(permissions.BasePermission):
             user=request.user,
             role__in=['owner', 'admin']
         ).exists()
+

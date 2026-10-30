@@ -99,3 +99,4 @@ export default function NotificationsPopover({ onClose }) {
     </div>
   );
 }
+

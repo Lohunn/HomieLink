@@ -75,3 +75,4 @@ export function useWorkspaceSocket(workspaceId, onEvent) {
 
   return { isConnected, sendEvent };
 }
+

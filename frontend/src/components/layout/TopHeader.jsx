@@ -72,3 +72,4 @@ export default function TopHeader({ onOpenSearch }) {
     </header>
   );
 }
+

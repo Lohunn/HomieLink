@@ -149,3 +149,4 @@ export default function LoginView({ onSwitchToRegister }) {
     </div>
   );
 }
+

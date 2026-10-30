@@ -434,3 +434,4 @@ export default function KanbanBoardView({ onJumpToChannel }) {
     </div>
   );
 }
+

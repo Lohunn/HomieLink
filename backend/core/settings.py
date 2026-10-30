@@ -132,3 +132,4 @@ else:
             'BACKEND': 'channels.layers.InMemoryChannelLayer'
         }
     }
+

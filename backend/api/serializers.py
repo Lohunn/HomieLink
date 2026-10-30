@@ -95,6 +95,9 @@ class MessageSerializer(serializers.ModelSerializer):
     reactions = ReactionSerializer(many=True, read_only=True)
     converted_task = serializers.SerializerMethodField()
     reply_to_content = serializers.SerializerMethodField()
+    workspace = serializers.PrimaryKeyRelatedField(read_only=True)
+    channel = serializers.PrimaryKeyRelatedField(queryset=Channel.objects.all(), required=False, allow_null=True)
+    conversation = serializers.PrimaryKeyRelatedField(queryset=Conversation.objects.all(), required=False, allow_null=True)
 
     class Meta:
         model = Message
@@ -103,7 +106,7 @@ class MessageSerializer(serializers.ModelSerializer):
             'attachment_url', 'attachment_name', 'reply_to', 'reply_to_content',
             'is_converted_to_task', 'converted_task', 'reactions', 'created_at', 'edited_at'
         )
-        read_only_fields = ('id', 'sender', 'reactions', 'is_converted_to_task', 'converted_task', 'created_at', 'edited_at')
+        read_only_fields = ('id', 'workspace', 'sender', 'reactions', 'is_converted_to_task', 'converted_task', 'created_at', 'edited_at')
 
     def get_converted_task(self, obj):
         task = obj.converted_tasks.first()
@@ -291,3 +294,4 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ('id', 'user', 'actor', 'workspace', 'type', 'title', 'message', 'reference_type', 'reference_id', 'is_read', 'created_at')
         read_only_fields = ('id', 'user', 'actor', 'created_at')
+

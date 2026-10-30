@@ -120,3 +120,4 @@ class WorkspaceConsumer(AsyncJsonWebsocketConsumer):
             'event': event['event_type'],
             'data': event['payload']
         })
+
