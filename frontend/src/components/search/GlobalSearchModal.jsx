@@ -34,25 +34,25 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
   }, [query, activeWorkspace]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-start justify-center pt-20 p-4">
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-bg-main/80 backdrop-blur-sm flex items-start justify-center pt-20 p-4">
+      <div className="w-full max-w-2xl bg-bg-sidebar border border-border-subtle rounded-lg shadow-2xl overflow-hidden flex flex-col">
         {/* Input */}
-        <div className="p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-800/40">
-          <Search className="h-5 w-5 text-slate-400" />
+        <div className="p-4 border-b border-border-subtle flex items-center gap-3 bg-bg-surface/50">
+          <Search className="h-5 w-5 text-brand-primary" />
           <input
             type="text"
             autoFocus
             placeholder="Search channels, messages, tasks, and ideas..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-text-primary placeholder-text-muted focus:outline-none"
           />
           {query && (
-            <button onClick={() => setQuery('')} className="p-1 text-slate-400 hover:text-white">
+            <button onClick={() => setQuery('')} className="p-1 text-text-muted hover:text-text-primary">
               <X className="h-4 w-4" />
             </button>
           )}
-          <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] bg-slate-800 border border-slate-700 text-slate-400 rounded">
+          <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] bg-bg-surface border border-border-subtle text-text-muted rounded">
             ESC
           </kbd>
         </div>
@@ -60,9 +60,9 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
         {/* Results */}
         <div className="max-h-96 overflow-y-auto p-4 space-y-4">
           {loading ? (
-            <div className="text-center py-6 text-xs text-slate-500">Searching workspace...</div>
+            <div className="text-center py-6 text-xs text-text-muted">Searching workspace...</div>
           ) : query && !results.channels.length && !results.messages.length && !results.tasks.length && !results.ideas.length ? (
-            <div className="text-center py-8 text-xs text-slate-500">
+            <div className="text-center py-8 text-xs text-text-muted">
               No results found for "{query}"
             </div>
           ) : (
@@ -70,7 +70,7 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
               {/* Channels */}
               {results.channels?.length > 0 && (
                 <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-2">
                     Channels
                   </h4>
                   <div className="space-y-1">
@@ -81,13 +81,13 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
                           onSelectChannel(c);
                           onClose();
                         }}
-                        className="p-2 rounded-xl hover:bg-slate-800 flex items-center justify-between cursor-pointer group"
+                        className="p-2 rounded-md hover:bg-bg-hover flex items-center justify-between cursor-pointer group"
                       >
-                        <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                          <Hash className="h-4 w-4 text-slate-400" />
+                        <div className="flex items-center gap-2 text-xs font-semibold text-text-primary">
+                          <Hash className="h-4 w-4 text-brand-primary" />
                           #{c.name}
                         </div>
-                        <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                        <ArrowRight className="h-3.5 w-3.5 text-text-muted group-hover:text-text-primary" />
                       </div>
                     ))}
                   </div>
@@ -97,7 +97,7 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
               {/* Tasks */}
               {results.tasks?.length > 0 && (
                 <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-2">
                     Tasks
                   </h4>
                   <div className="space-y-1">
@@ -108,18 +108,18 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
                           onSelectTask(t);
                           onClose();
                         }}
-                        className="p-2.5 rounded-xl hover:bg-slate-800 flex items-center justify-between cursor-pointer group"
+                        className="p-2.5 rounded-md hover:bg-bg-hover flex items-center justify-between cursor-pointer group"
                       >
                         <div className="flex items-center gap-2">
-                          <CheckSquare className="h-4 w-4 text-emerald-400" />
+                          <CheckSquare className="h-4 w-4 text-brand-secondary" />
                           <div>
-                            <div className="text-xs font-semibold text-white">{t.title}</div>
-                            <div className="text-[10px] text-slate-400">
+                            <div className="text-xs font-semibold text-text-primary">{t.title}</div>
+                            <div className="text-[10px] text-text-muted">
                               {t.project_name} • Status: {t.status}
                             </div>
                           </div>
                         </div>
-                        <ArrowRight className="h-3.5 w-3.5 text-slate-500 group-hover:text-white" />
+                        <ArrowRight className="h-3.5 w-3.5 text-text-muted group-hover:text-text-primary" />
                       </div>
                     ))}
                   </div>
@@ -129,21 +129,21 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
               {/* Messages */}
               {results.messages?.length > 0 && (
                 <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-2">
                     Messages
                   </h4>
                   <div className="space-y-1">
                     {results.messages.map((m) => (
                       <div
                         key={m.id}
-                        className="p-2.5 rounded-xl hover:bg-slate-800 flex items-start gap-2.5 cursor-pointer"
+                        className="p-2.5 rounded-md hover:bg-bg-hover flex items-start gap-2.5 cursor-pointer"
                       >
-                        <MessageSquare className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
+                        <MessageSquare className="h-4 w-4 text-brand-primary shrink-0 mt-0.5" />
                         <div>
-                          <div className="text-[11px] font-semibold text-white">
+                          <div className="text-[11px] font-semibold text-text-primary">
                             @{m.sender.username} in #{m.channel ? 'channel' : 'chat'}
                           </div>
-                          <p className="text-xs text-slate-300 line-clamp-1">{m.content}</p>
+                          <p className="text-xs text-text-secondary line-clamp-1">{m.content}</p>
                         </div>
                       </div>
                     ))}
@@ -154,17 +154,17 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
               {/* Ideas */}
               {results.ideas?.length > 0 && (
                 <div>
-                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-text-muted mb-2">
                     Ideas
                   </h4>
                   <div className="space-y-1">
                     {results.ideas.map((i) => (
                       <div
                         key={i.id}
-                        className="p-2.5 rounded-xl hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+                        className="p-2.5 rounded-md hover:bg-bg-hover flex items-center gap-2 cursor-pointer"
                       >
                         <Lightbulb className="h-4 w-4 text-amber-400" />
-                        <span className="text-xs font-medium text-white">{i.title}</span>
+                        <span className="text-xs font-medium text-text-primary">{i.title}</span>
                       </div>
                     ))}
                   </div>
@@ -177,4 +177,3 @@ export default function GlobalSearchModal({ onClose, onSelectChannel, onSelectTa
     </div>
   );
 }
-

@@ -12,11 +12,11 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="h-screen w-screen bg-slate-950 flex flex-col items-center justify-center text-slate-400 gap-3">
-        <div className="h-12 w-12 rounded-2xl bg-brand-600 flex items-center justify-center text-white shadow-xl shadow-brand-500/20 animate-pulse">
+      <div className="h-screen w-screen bg-bg-main flex flex-col items-center justify-center text-text-muted gap-3">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-brand-primary to-indigo-600 flex items-center justify-center text-white shadow-xl shadow-brand-primary/20 animate-pulse">
           <Layers className="h-6 w-6" />
         </div>
-        <p className="text-xs font-medium tracking-wider uppercase text-slate-500">
+        <p className="text-xs font-semibold tracking-wider uppercase text-text-muted">
           Loading HomieLink...
         </p>
       </div>
@@ -36,4 +36,3 @@ export default function App() {
     </WorkspaceProvider>
   );
 }
-

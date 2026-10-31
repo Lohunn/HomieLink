@@ -3,7 +3,8 @@ import { useWorkspace } from '../../context/WorkspaceContext';
 import GlobalNavRail from './GlobalNavRail';
 import WorkspaceSidebar from './WorkspaceSidebar';
 import TopHeader from './TopHeader';
-import WorkspaceOverviewView from '../overview/WorkspaceOverviewView';
+import RightDetailsPanel from './RightDetailsPanel';
+import MobileNavigation from './MobileNavigation';
 import ChannelChatView from '../chat/ChannelChatView';
 import KanbanBoardView from '../kanban/KanbanBoardView';
 import IdeasAndPollsView from '../ideas/IdeasAndPollsView';
@@ -12,7 +13,12 @@ import MembersView from '../members/MembersView';
 import GlobalSearchModal from '../search/GlobalSearchModal';
 
 export default function AppLayout() {
-  const { activeSection, setActiveSection, channels, setActiveChannel } = useWorkspace();
+  const {
+    activeSection, setActiveSection,
+    showRightPanel, toggleRightPanel,
+    mobileView, setMobileView,
+    channels, selectChannel
+  } = useWorkspace();
   const [showSearch, setShowSearch] = useState(false);
 
   // Ctrl+K keyboard shortcut
@@ -30,46 +36,64 @@ export default function AppLayout() {
   const handleJumpToChannel = (channelId) => {
     const target = channels.find((c) => c.id === channelId);
     if (target) {
-      setActiveChannel(target);
-      setActiveSection('channels');
+      selectChannel(target);
     }
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 font-sans">
-      {/* 1. Global Workspace Rail */}
-      <GlobalNavRail />
+    <div className="flex h-screen w-screen overflow-hidden bg-bg-main font-sans text-text-primary">
+      {/* 1. Global Navigation Rail (Desktop) */}
+      <div className="hidden sm:flex">
+        <GlobalNavRail />
+      </div>
 
-      {/* 2. Workspace Navigation Sidebar */}
-      <WorkspaceSidebar />
+      {/* 2. Workspace Sidebar (Channels & DMs) */}
+      {/* On mobile, hidden when viewing active chat */}
+      <div className={`${mobileView === 'chat' && activeSection === 'channels' ? 'hidden sm:flex' : 'flex'} h-full w-full sm:w-auto`}>
+        <WorkspaceSidebar onOpenSearch={() => setShowSearch(true)} />
+      </div>
 
-      {/* 3. Main Stage Container */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      {/* 3. Center Main Stage */}
+      {/* On mobile, hidden when viewing conversation list */}
+      <div className={`${mobileView === 'list' && activeSection === 'channels' ? 'hidden sm:flex' : 'flex'} flex-1 flex flex-col min-w-0 h-full overflow-hidden pb-14 sm:pb-0`}>
         {/* Top Header */}
         <TopHeader onOpenSearch={() => setShowSearch(true)} />
 
         {/* Dynamic Section Stage */}
-        <main className="flex-1 overflow-hidden flex flex-col">
-          {activeSection === 'overview' && <WorkspaceOverviewView />}
-          {activeSection === 'channels' && (
-            <ChannelChatView onNavigateToTask={() => setActiveSection('projects')} />
+        <div className="flex-1 overflow-hidden flex min-h-0">
+          <main className="flex-1 overflow-hidden flex flex-col min-w-0">
+            {activeSection === 'channels' && (
+              <ChannelChatView onNavigateToTask={() => setActiveSection('projects')} />
+            )}
+            {activeSection === 'projects' && (
+              <KanbanBoardView onJumpToChannel={handleJumpToChannel} />
+            )}
+            {activeSection === 'ideas' && <IdeasAndPollsView />}
+            {activeSection === 'activity' && <ActivityFeedView />}
+            {activeSection === 'members' && <MembersView />}
+          </main>
+
+          {/* 4. Collapsible Right Conversation Details Panel (Desktop 3 zones) */}
+          {activeSection === 'channels' && showRightPanel && (
+            <div className="hidden lg:flex h-full">
+              <RightDetailsPanel
+                onClose={toggleRightPanel}
+                onNavigateToKanban={() => setActiveSection('projects')}
+              />
+            </div>
           )}
-          {activeSection === 'projects' && (
-            <KanbanBoardView onJumpToChannel={handleJumpToChannel} />
-          )}
-          {activeSection === 'ideas' && <IdeasAndPollsView />}
-          {activeSection === 'activity' && <ActivityFeedView />}
-          {activeSection === 'members' && <MembersView />}
-        </main>
+        </div>
       </div>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileNavigation />
 
       {/* Global Spotlight Search Modal */}
       {showSearch && (
         <GlobalSearchModal
           onClose={() => setShowSearch(false)}
           onSelectChannel={(c) => {
-            setActiveChannel(c);
-            setActiveSection('channels');
+            selectChannel(c);
           }}
           onSelectTask={() => {
             setActiveSection('projects');
@@ -79,4 +103,3 @@ export default function AppLayout() {
     </div>
   );
 }
-

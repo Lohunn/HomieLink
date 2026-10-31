@@ -2,16 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-main: #101116;
+  --bg-sidebar: #191B24;
+  --bg-surface: #222531;
+  --bg-hover: #2B2E3C;
+
+  --brand-primary: #8B5CF6;
+  --brand-hover: #7C3AED;
+  --brand-secondary: #38BDF8;
+
+  --text-primary: #F4F4F7;
+  --text-secondary: #9295A5;
+  --text-muted: #686C7D;
+
+  --border-subtle: #303341;
+  --status-online: #22C55E;
+  --status-away: #FBBF24;
+  --status-error: #F87171;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --sidebar-width: 260px;
+  --details-width: 280px;
+  --header-height: 64px;
+}
+
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button, input, textarea {
+    font: inherit;
   }
 }
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -19,11 +56,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+  background: #2B2E3C;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.4);
+  background: #3B4052;
 }
-

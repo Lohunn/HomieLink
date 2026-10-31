@@ -6,13 +6,17 @@ import { useAuth } from './AuthContext';
 const WorkspaceContext = createContext();
 
 export function WorkspaceProvider({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [workspaces, setWorkspaces] = useState([]);
   const [activeWorkspace, setActiveWorkspace] = useState(null);
-  const [activeSection, setActiveSection] = useState('overview'); // overview, channels, projects, ideas, activity, members
+  const [activeSection, setActiveSection] = useState('channels'); // default to chat as the star of the app!
   
   const [channels, setChannels] = useState([]);
   const [activeChannel, setActiveChannel] = useState(null);
+
+  const [conversations, setConversations] = useState([]);
+  const [activeConversation, setActiveConversation] = useState(null);
+  const [chatType, setChatType] = useState('channel'); // 'channel' | 'direct'
 
   const [projects, setProjects] = useState([]);
   const [activeProject, setActiveProject] = useState(null);
@@ -20,6 +24,12 @@ export function WorkspaceProvider({ children }) {
   const [members, setMembers] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState(new Set());
   const [typingUsers, setTypingUsers] = useState({});
+
+  // Right panel collapsible state (Desktop 3 zones)
+  const [showRightPanel, setShowRightPanel] = useState(true);
+
+  // Mobile navigation state ('list' = conversation list, 'chat' = active chat screen)
+  const [mobileView, setMobileView] = useState('chat');
 
   const [loading, setLoading] = useState(true);
 
@@ -43,22 +53,24 @@ export function WorkspaceProvider({ children }) {
     fetchWorkspaces();
   }, [fetchWorkspaces]);
 
-  // Fetch workspace details (channels, projects, members) when activeWorkspace changes
+  // Fetch workspace details (channels, direct conversations, projects, members)
   const fetchWorkspaceDetails = useCallback(async () => {
     if (!activeWorkspace) return;
 
     try {
-      const [channelData, projectData, memberData] = await Promise.all([
+      const [channelData, projectData, memberData, convData] = await Promise.all([
         apiRequest(`/channels/?workspace_id=${activeWorkspace.id}`),
         apiRequest(`/projects/?workspace_id=${activeWorkspace.id}`),
-        apiRequest(`/workspaces/${activeWorkspace.id}/members/`)
+        apiRequest(`/workspaces/${activeWorkspace.id}/members/`),
+        apiRequest('/conversations/')
       ]);
 
       setChannels(channelData);
       setProjects(projectData);
       setMembers(memberData);
+      setConversations(convData);
 
-      if (channelData.length > 0 && !activeChannel) {
+      if (channelData.length > 0 && !activeChannel && chatType === 'channel') {
         setActiveChannel(channelData[0]);
       }
       if (projectData.length > 0 && !activeProject) {
@@ -67,7 +79,7 @@ export function WorkspaceProvider({ children }) {
     } catch (err) {
       console.error("Failed to load workspace details", err);
     }
-  }, [activeWorkspace, activeChannel, activeProject]);
+  }, [activeWorkspace, activeChannel, activeProject, chatType]);
 
   useEffect(() => {
     fetchWorkspaceDetails();
@@ -113,6 +125,37 @@ export function WorkspaceProvider({ children }) {
     handleSocketEvent
   );
 
+  const selectChannel = (channel) => {
+    setActiveChannel(channel);
+    setChatType('channel');
+    setActiveSection('channels');
+    setMobileView('chat');
+  };
+
+  const selectConversation = (conv) => {
+    setActiveConversation(conv);
+    setChatType('direct');
+    setActiveSection('channels');
+    setMobileView('chat');
+  };
+
+  const startDirectMessage = async (targetUserId) => {
+    try {
+      const conv = await apiRequest('/conversations/', {
+        method: 'POST',
+        body: JSON.stringify({
+          user_id: targetUserId,
+          workspace_id: activeWorkspace?.id
+        })
+      });
+      setConversations(prev => [...prev.filter(c => c.id !== conv.id), conv]);
+      selectConversation(conv);
+      return conv;
+    } catch (err) {
+      console.error("Failed to start DM", err);
+    }
+  };
+
   const createWorkspace = async (name, description) => {
     const data = await apiRequest('/workspaces/', {
       method: 'POST',
@@ -135,7 +178,7 @@ export function WorkspaceProvider({ children }) {
       })
     });
     setChannels(prev => [...prev, data]);
-    setActiveChannel(data);
+    selectChannel(data);
     return data;
   };
 
@@ -163,13 +206,23 @@ export function WorkspaceProvider({ children }) {
       setActiveSection,
       channels,
       activeChannel,
-      setActiveChannel,
+      selectChannel,
+      conversations,
+      activeConversation,
+      selectConversation,
+      startDirectMessage,
+      chatType,
       projects,
       activeProject,
       setActiveProject,
       members,
       onlineUsers,
       typingUsers,
+      showRightPanel,
+      setShowRightPanel,
+      toggleRightPanel: () => setShowRightPanel(prev => !prev),
+      mobileView,
+      setMobileView,
       loading,
       isConnected,
       sendEvent,
@@ -187,4 +240,3 @@ export function WorkspaceProvider({ children }) {
 export function useWorkspace() {
   return useContext(WorkspaceContext);
 }
-

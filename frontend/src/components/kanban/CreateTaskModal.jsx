@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { apiRequest } from '../../api/client';
-import { CheckSquare, X, Plus, Calendar, Flag, UserCheck } from 'lucide-react';
+import { Plus, X, Calendar, Flag, UserCheck, CheckSquare } from 'lucide-react';
 
 export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTaskCreated }) {
   const { activeProject, members } = useWorkspace();
@@ -50,22 +50,22 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-bg-main/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="w-full max-w-lg bg-bg-sidebar border border-border-subtle rounded-lg shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-4 px-6 border-b border-slate-800 flex items-center justify-between bg-slate-800/40">
+        <div className="p-4 px-6 border-b border-border-subtle flex items-center justify-between bg-bg-surface/50">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-brand-600/20 text-brand-400 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-md bg-brand-primary/20 text-brand-primary flex items-center justify-center">
               <Plus className="h-4 w-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-white">Create New Task</h2>
-              <p className="text-xs text-slate-400">Add to project {activeProject?.name}</p>
+              <h2 className="text-sm font-bold text-text-primary">Create New Task</h2>
+              <p className="text-[11px] text-text-secondary">Add to {activeProject?.name}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-bg-hover transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -74,13 +74,13 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+            <div className="p-3 rounded-md bg-status-error/10 border border-status-error/30 text-status-error text-xs">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">
               Task Title
             </label>
             <input
@@ -88,33 +88,33 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full bg-bg-surface border border-border-subtle rounded-md px-3.5 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               placeholder="e.g. Implement user authentication test suite"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">
               Description
             </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full bg-bg-surface border border-border-subtle rounded-md px-3.5 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               placeholder="Add details, acceptance criteria, or links..."
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1">
                 <Flag className="h-3.5 w-3.5 text-amber-400" /> Priority
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full bg-bg-surface border border-border-subtle rounded-md px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -124,13 +124,13 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1">
                 Column
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full bg-bg-surface border border-border-subtle rounded-md px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               >
                 <option value="backlog">Backlog</option>
                 <option value="todo">To Do</option>
@@ -143,13 +143,13 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1">
-                <UserCheck className="h-3.5 w-3.5 text-indigo-400" /> Assignee
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1">
+                <UserCheck className="h-3.5 w-3.5 text-brand-secondary" /> Assignee
               </label>
               <select
                 value={assigneeId}
                 onChange={(e) => setAssigneeId(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full bg-bg-surface border border-border-subtle rounded-md px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               >
                 <option value="">Unassigned</option>
                 {members.map((m) => (
@@ -161,30 +161,30 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1">
                 <Calendar className="h-3.5 w-3.5 text-emerald-400" /> Due Date
               </label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full bg-bg-surface border border-border-subtle rounded-md px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-brand-primary"
               />
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex justify-end gap-2.5">
+          <div className="pt-3 border-t border-border-subtle flex justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 text-xs font-medium text-text-secondary hover:text-text-primary rounded-md hover:bg-bg-hover transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 text-xs font-medium bg-brand-600 hover:bg-brand-500 text-white rounded-xl shadow-lg shadow-brand-600/30 transition-all flex items-center gap-1.5"
+              className="px-4 py-2 text-xs font-semibold bg-brand-primary hover:bg-brand-hover text-white rounded-md shadow-md shadow-brand-primary/20 transition-all flex items-center gap-1.5"
             >
               {submitting ? 'Creating...' : 'Create Task'}
             </button>
@@ -194,4 +194,3 @@ export default function CreateTaskModal({ initialStatus = 'todo', onClose, onTas
     </div>
   );
 }
-
