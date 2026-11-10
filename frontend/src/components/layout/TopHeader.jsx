@@ -3,10 +3,10 @@ import { useWorkspace } from '../../context/WorkspaceContext';
 import NotificationsPopover from '../notifications/NotificationsPopover';
 import {
   Search, Bell, Hash, Lock, Users, Sidebar, ChevronLeft,
-  Sparkles, CheckSquare, MoreVertical, Phone, Video
+  Sparkles, CheckSquare, MoreVertical, Phone, Video, Compass, HelpCircle
 } from 'lucide-react';
 
-export default function TopHeader({ onOpenSearch }) {
+export default function TopHeader({ onOpenSearch, onOpenOnboarding }) {
   const {
     activeChannel, activeConversation, chatType, activeSection,
     isConnected, showRightPanel, toggleRightPanel,
@@ -86,8 +86,20 @@ export default function TopHeader({ onOpenSearch }) {
         </kbd>
       </button>
 
-      {/* Right Controls: Real-time Live Badge, Notifications, Details Panel Toggle */}
+      {/* Right Controls: Real-time Live Badge, Dedicated Onboard Button, Notifications, Details Panel Toggle */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Dedicated Onboarding Tour Button */}
+        {onOpenOnboarding && (
+          <button
+            onClick={onOpenOnboarding}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 text-brand-primary text-xs font-semibold transition-all hover:scale-[1.02] shadow-sm"
+            title="Start Workspace Onboarding & Interactive Tour"
+          >
+            <Compass className="h-3.5 w-3.5 animate-spin-slow" />
+            <span className="hidden sm:inline">Tour & Onboard</span>
+          </button>
+        )}
+
         {/* Live WebSocket Sync Pill */}
         <div
           className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border ${

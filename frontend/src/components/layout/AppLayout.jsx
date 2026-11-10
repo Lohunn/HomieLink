@@ -11,6 +11,7 @@ import IdeasAndPollsView from '../ideas/IdeasAndPollsView';
 import ActivityFeedView from '../activity/ActivityFeedView';
 import MembersView from '../members/MembersView';
 import GlobalSearchModal from '../search/GlobalSearchModal';
+import OnboardingModal from './OnboardingModal';
 
 export default function AppLayout() {
   const {
@@ -20,6 +21,7 @@ export default function AppLayout() {
     channels, selectChannel
   } = useWorkspace();
   const [showSearch, setShowSearch] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Ctrl+K keyboard shortcut
   useEffect(() => {
@@ -50,14 +52,20 @@ export default function AppLayout() {
       {/* 2. Workspace Sidebar (Channels & DMs) */}
       {/* On mobile, hidden when viewing active chat */}
       <div className={`${mobileView === 'chat' && activeSection === 'channels' ? 'hidden sm:flex' : 'flex'} h-full w-full sm:w-auto`}>
-        <WorkspaceSidebar onOpenSearch={() => setShowSearch(true)} />
+        <WorkspaceSidebar
+          onOpenSearch={() => setShowSearch(true)}
+          onOpenOnboarding={() => setShowOnboarding(true)}
+        />
       </div>
 
       {/* 3. Center Main Stage */}
       {/* On mobile, hidden when viewing conversation list */}
       <div className={`${mobileView === 'list' && activeSection === 'channels' ? 'hidden sm:flex' : 'flex'} flex-1 flex flex-col min-w-0 h-full overflow-hidden pb-14 sm:pb-0`}>
         {/* Top Header */}
-        <TopHeader onOpenSearch={() => setShowSearch(true)} />
+        <TopHeader
+          onOpenSearch={() => setShowSearch(true)}
+          onOpenOnboarding={() => setShowOnboarding(true)}
+        />
 
         {/* Dynamic Section Stage */}
         <div className="flex-1 overflow-hidden flex min-h-0">
@@ -100,6 +108,12 @@ export default function AppLayout() {
           }}
         />
       )}
+
+      {/* Interactive Onboarding & Workspace Tour Modal */}
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+      />
     </div>
   );
 }

@@ -5,10 +5,10 @@ import CreateChannelModal from '../channel/CreateChannelModal';
 import {
   Hash, Plus, Lock, ChevronDown, ChevronRight, MessageSquare,
   FolderKanban, Lightbulb, Activity, Users, Search, Mic, MicOff,
-  Headphones, Settings, Shield, ShieldCheck, Sparkles
+  Headphones, Settings, Shield, ShieldCheck, Sparkles, Compass
 } from 'lucide-react';
 
-export default function WorkspaceSidebar({ onOpenSearch }) {
+export default function WorkspaceSidebar({ onOpenSearch, onOpenOnboarding }) {
   const {
     activeWorkspace, activeSection, setActiveSection,
     channels, activeChannel, selectChannel,
@@ -120,6 +120,16 @@ export default function WorkspaceSidebar({ onOpenSearch }) {
           <Activity className="h-4 w-4" />
           <span>Activity Feed</span>
         </button>
+
+        {onOpenOnboarding && (
+          <button
+            onClick={onOpenOnboarding}
+            className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-brand-primary hover:bg-brand-primary/10 border border-brand-primary/20 transition-all mt-1"
+          >
+            <Compass className="h-4 w-4" />
+            <span className="font-semibold">Quick Guide / Tour</span>
+          </button>
+        )}
       </div>
 
       {/* Scrollable Conversation Lists */}
